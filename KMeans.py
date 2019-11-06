@@ -6,11 +6,15 @@ from copy import deepcopy
 
 class KMeans:
 
-    def __init__(self, df, nb_clusters):
+    def __init__(self, df, nb_clusters, max_iter=300):
 
         self._df = copy(df)
         self._nb_clusters = nb_clusters
         self._centroids = {i: val for i, val in zip(range(nb_clusters), self._df.sample(n=nb_clusters).values)}
+        self._inertia = 0
+        self._max_iter = max_iter
+        self._nb_iter_run = 0
+
 
     def __affectation(self):
 
@@ -31,17 +35,21 @@ class KMeans:
     def fit(self):
 
         b_compute = True
+        self._nb_iter_run = 0
 
-        while b_compute:
-
+        while b_compute and self._nb_iter_run <= self._max_iter:
             self.__affectation()
             old_centroids = deepcopy(self._centroids)
             self.__compute_centroids()
-            b_compute = old_centroids == self._centroids
+            b_compute = not all(np.array_equal(self._centroids[i], old_centroids[i]) for i in old_centroids.keys())
+            self._nb_iter_run += 1
 
 
 if __name__ == "__main__":
 
-    df = pd.DataFrame({'x': [1, 2, 8, 10], 'y': [3, 2, 25, 14]})
-    k_means = KMeans(df, 2)
+    df = pd.DataFrame({'x': [1, 3, 3, 3, 3, 5], 'y': [2, 1, 2, 3, 4, 2]})
+    k_means = KMeans(df, 3)
     k_means.fit()
+    print(k_means._df)
+    print(k_means._centroids)
+    print(k_means._nb_iter_run)

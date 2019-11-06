@@ -32,6 +32,10 @@ class KMeans:
             new_y = np.mean(self._df[self._df.closest == str(k)].y)
             self._centroids[k] = np.array([new_x, new_y])
 
+    def __compute_inertia(self):
+        for k in self._centroids.keys():
+            self._inertia = self._inertia + np.sum(self._df[self._df.closest == str(k)]['distance_from_{}'.format(k)] ** 2)
+
     def fit(self):
 
         b_compute = True
@@ -43,13 +47,15 @@ class KMeans:
             self.__compute_centroids()
             b_compute = not all(np.array_equal(self._centroids[i], old_centroids[i]) for i in old_centroids.keys())
             self._nb_iter_run += 1
+        self.__compute_inertia()
 
 
 if __name__ == "__main__":
 
     df = pd.DataFrame({'x': [1, 3, 3, 3, 3, 5], 'y': [2, 1, 2, 3, 4, 2]})
-    k_means = KMeans(df, 3)
+    k_means = KMeans(df, 2)
     k_means.fit()
     print(k_means._df)
     print(k_means._centroids)
     print(k_means._nb_iter_run)
+    print(k_means._inertia)

@@ -15,7 +15,6 @@ class KMeans:
         self._max_iter = max_iter
         self._nb_iter_run = 0
 
-
     def __affectation(self):
 
         for k, v in self._centroids.items():
@@ -33,6 +32,7 @@ class KMeans:
             self._centroids[k] = np.array([new_x, new_y])
 
     def __compute_inertia(self):
+
         for k in self._centroids.keys():
             self._inertia = self._inertia + np.sum(self._df[self._df.closest == str(k)]['distance_from_{}'.format(k)] ** 2)
 
@@ -47,6 +47,7 @@ class KMeans:
             self.__compute_centroids()
             b_compute = not all(np.array_equal(self._centroids[i], old_centroids[i]) for i in old_centroids.keys())
             self._nb_iter_run += 1
+            
         self.__compute_inertia()
 
 

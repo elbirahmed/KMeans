@@ -4,6 +4,7 @@ from copy import copy
 from copy import deepcopy
 import inspect
 
+#author ahmed el bir
 
 class KMeans:
 
